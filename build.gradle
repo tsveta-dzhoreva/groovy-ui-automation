@@ -1,0 +1,84 @@
+plugins {
+    id 'groovy'
+    id 'java'
+    id 'maven'
+    id 'idea'
+}
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+def gebVersion = '3.0.1'
+def seleniumVersion = '3.141.59'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile ('org.codehaus.groovy:groovy-all:2.5.7')
+    //testCompile ('org.junit.jupiter:junit-jupiter-api:5.5.0-M1')
+    testCompile ('junit:junit:4.12')
+    testCompile ('org.testng:testng:6.14.3')
+    compile ('org.hamcrest:hamcrest-all:1.3')
+    compile ('commons-logging:commons-logging:1.2')
+
+    compile ("org.gebish:geb-core:${gebVersion}") { transitive = false }
+    compile ("org.gebish:geb-waiting:${gebVersion}") { transitive = false }
+    compile ("org.gebish:geb-implicit-assertions:${gebVersion}") { transitive = false }
+    compile ("org.gebish:geb-ast:${gebVersion}") { transitive = false }
+    compile ("org.gebish:geb-junit4:${gebVersion}") { transitive = false }
+    compile ("org.gebish:geb-testng:${gebVersion}")
+
+    compile ("org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}")
+    compile ("org.seleniumhq.selenium:selenium-ie-driver:${seleniumVersion}")
+    compile ("org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}")
+    compile ("org.seleniumhq.selenium:selenium-support:${seleniumVersion}")
+    compile ("org.seleniumhq.selenium:selenium-remote-driver:${seleniumVersion}")
+    
+    // Logging
+    compile ("org.slf4j:slf4j-log4j12:1.7.26")
+    compile ("org.apache.logging.log4j:log4j-core:2.11.2")
+}
+sourceSets {
+    test {
+        groovy {
+            srcDir 'src'
+        }
+    }
+}
+
+compileTestGroovy {
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.jvmArgs =['-Xmx512m'] // Set maximum memory to 512MB
+}
+
+test {
+    // Use UTC time zone for consistent date/time behavior
+    jvmArgs '-Duser.timezone=UTC'
+    jvmArgs '-XX:MaxPermSize=256M'
+    jvmArgs '-Xms512m'
+    jvmArgs '-Xmx1536m'
+
+    systemProperties 'geb.build.adapter': 'config.GebConfigurationAdapter'
+    systemProperties 'geb.build.reportsDir': "${reporting.baseDir}/geb"
+    //have to specifically call those out here as the normal way of passing with the '-D' switch
+    //doesn't pass the value all the way to geb. explicitly setting this here again passes the variable
+    //content all the way through  (as of geb 0.7.2 - prob due to forked execution)
+    systemProperties 'geb.env' : System.properties['geb.env']
+    if (System.properties['geb.driver']) {
+        systemProperties 'geb.driver': System.properties['geb.driver']
+    } else {
+        systemProperties 'geb.driver': "chrome"
+    }
+    if (System.properties['webdriver.chrome.driver']) {
+        systemProperties 'webdriver.chrome.driver' : System.properties['webdriver.chrome.driver']
+    } else {
+        systemProperties 'webdriver.chrome.driver' : "chromedriver2"
+    }
+
+    //useTestNG()
+}
+
