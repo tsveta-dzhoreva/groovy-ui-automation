@@ -74,7 +74,7 @@ class RestTestsLucidLink {
 
         request.body(parentData.toJSONString());
 
-        Response response = request.post(filespaceURI); // use filespaceURI if the trailing / is OK
+        Response response = request.post(filespaceURI);
 
         return response;
     }
