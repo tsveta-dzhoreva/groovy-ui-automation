@@ -16,7 +16,7 @@ class RestTestsLucidLink {
 
     @After
     void cleanup() {
-        RequestSpecification request = this.createJSONGetRequest();
+        RequestSpecification request = this.getRequest();
 
         Response response = request.delete(this.getFilespaceURI());
 
@@ -29,7 +29,7 @@ class RestTestsLucidLink {
         assert response.getStatusCode() == 201
         this.fileSpaceId = response.path("id");
 
-        RequestSpecification getRequest = this.createJSONGetRequest();
+        RequestSpecification getRequest = this.getRequest();
 
         // Wait filespace to be provisioned
         String status = ""
@@ -56,7 +56,7 @@ class RestTestsLucidLink {
     }
 
     Response createFilespace() {
-        RequestSpecification request = this.createJSONGetRequest();
+        RequestSpecification request = this.getRequest();
 
         JSONObject childData = new JSONObject();
 
@@ -96,7 +96,7 @@ class RestTestsLucidLink {
         return response.path("access_token");
     }
 
-    RequestSpecification createJSONGetRequest() {
+    RequestSpecification getRequest() {
         RequestSpecification getRequest = RestAssured.given();
         getRequest.headers("Content-Type", "application/json",
                 "Authorization", "Bearer " + getToken());
