@@ -24,8 +24,8 @@ class RestTestsLucidLink {
     }
 
     @Test
-    void testCreateDomain(){
-        Response response = this.createDomain();
+    void testCreateFilespace(){
+        Response response = this.createFilespace();
         assert response.getStatusCode() == 201
         this.fileSpaceId = response.path("id");
 
@@ -55,7 +55,7 @@ class RestTestsLucidLink {
         assert status == "provisioned";
     }
 
-    Response createDomain() {
+    Response createFilespace() {
         RequestSpecification request = this.createJSONGetRequest();
 
         JSONObject childData = new JSONObject();
