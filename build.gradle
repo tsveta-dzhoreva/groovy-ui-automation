@@ -11,6 +11,7 @@ sourceCompatibility = 1.8
 
 def gebVersion = '3.0.1'
 def seleniumVersion = '3.141.59'
+def resteasyVersion = '3.0.11.Final'
 
 
 repositories {
@@ -24,6 +25,16 @@ dependencies {
     testCompile ('org.testng:testng:6.14.3')
     compile ('org.hamcrest:hamcrest-all:1.3')
     compile ('commons-logging:commons-logging:1.2')
+    compile ("org.jboss.resteasy:resteasy-client:${resteasyVersion}")
+    compile("org.jboss.resteasy:resteasy-jaxrs:${resteasyVersion}")
+    compile("org.jboss.resteasy:async-http-servlet-3.0:${resteasyVersion}")
+    compile("org.jboss.resteasy:jaxrs-api:${resteasyVersion}")
+    compile("org.jboss.resteasy:resteasy-servlet-initializer:${resteasyVersion}")
+    compile("org.jboss.resteasy:resteasy-jaxb-provider:${resteasyVersion}")
+    compile("org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}")
+    compile ('io.rest-assured:rest-assured:4.1.2')
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
 
     compile ("org.gebish:geb-core:${gebVersion}") { transitive = false }
     compile ("org.gebish:geb-waiting:${gebVersion}") { transitive = false }
@@ -76,9 +87,8 @@ test {
     if (System.properties['webdriver.chrome.driver']) {
         systemProperties 'webdriver.chrome.driver' : System.properties['webdriver.chrome.driver']
     } else {
-        systemProperties 'webdriver.chrome.driver' : "chromedriver2"
+        systemProperties 'webdriver.chrome.driver' : "chromedriver3"
     }
-
     //useTestNG()
 }
 
